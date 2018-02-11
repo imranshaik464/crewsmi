@@ -1,5 +1,5 @@
 <?xml version="1.0" ?> 
-<project name="AntExample1" default="war"> 
+<!--<project name="AntExample1" default="war"> 
  
 <path id="compile.classpath"> 
 <fileset dir="WebContent/WEB-INF/lib"> 
@@ -24,9 +24,10 @@
 	
  
 <target name="war" depends="compile"> 
+
 <!-- <war destfile="dist/AntExample.war"
  webxml="WebContent/WEB-INF/web.xml"> 
-<fileset dir="WebContent"/> -->
+<fileset dir="WebContent"/> 
 	
 
 	<war destfile="C:\apache-tomcat-8.0.43\webapps\AntExample.war"
@@ -43,4 +44,131 @@
 <delete dir="build" /> 
 </target> 
  
-</project> 
+
+</project>--> 
+
+
+
+
+<!--<project name="master" >
+
+<property name="class.dir" location="../Source/buildwork" />
+<property name="ecpsproperties.dir" location="D:\ecpsproperties\jars\platform" />
+<property name="jbossdeploy.dir" location="D:\jboss-6.1.0.Final\server\default\deploy" />
+
+<target name="clean">
+<delete dir="${class.dir}" />
+
+</target>
+
+<target name="makedir">
+<mkdir dir="${class.dir}" />
+<mkdir dir="${class.dir}/jar" />
+<mkdir dir="${class.dir}/ear" />
+<mkdir dir="${class.dir}/war" />
+</target>
+
+<filelist id="projects" dir=".">
+<file name="../Source/ValueObjects/build.xml"/>
+<file name="../Source/ECPSValueObjects/build.xml"/>
+<file name="../Source/ECPSUtils/build.xml"/>
+<file name="../Source/CommonExceptions/build.xml"/>
+<file name="../Source/ECPSExceptions/build.xml"/>
+<file name="../Source/ECPSCommon/build.xml"/>
+<file name="../Source/BaseDAO/build.xml"/>
+<file name="../Source/PageManagerValueObjects/build.xml"/>
+<file name="../Source/PageManagerDAO/build.xml"/>
+<file name="../Source/ECPSDAO/build.xml"/>
+<file name="../Source/PageManagerEJBClient/build.xml"/>
+<file name="../Source/PartyEJBClient/build.xml"/>
+<file name="../Source/ReportsEJBClient/build.xml"/>
+<file name="../Source/StagingEJBClient/build.xml"/>
+<file name="../Source/MessageBoardEJBClient/build.xml"/>
+<file name="../Source/PageManagerFacade/build.xml"/>
+<file name="../Source/PartyFacade/build.xml"/>
+<file name="../Source/ReportsFacade/build.xml"/>
+<file name="../Source/StagingFacade/build.xml"/>
+<file name="../Source/MessageBoardFacade/build.xml"/>
+
+<file name="../Source/MessageBoardEJB/build.xml"/>
+<file name="../Source/MessageBoardEAR/build.xml"/>
+<file name="../Source/PageManagerEJB/build.xml"/>
+<file name="../Source/PageManagerEAR/build.xml"/>
+
+<file name="../Source/PartyEJB/build.xml"/>
+<file name="../Source/PartyEAR/build.xml"/>
+
+<file name="../Source/ReportsEJB/build.xml"/>
+<file name="../Source/ReportsEAR/build.xml"/>
+
+<file name="../Source/StagingEJB/build.xml"/>
+<file name="../Source/StagingEAR/build.xml"/>
+
+<file name="../Source/Admin/build.xml"/>
+<file name="../Source/eCPSClient/build.xml"/>
+<file name="../Source/MessageBoardServices/build.xml"/>
+<file name="../Source/OAuth/build.xml"/>
+<file name="../Source/PageManagerRest/build.xml"/>
+<file name="../Source/PartyServices/build.xml"/>
+<file name="../Source/ReportsServices/build.xml"/>
+<file name="../Source/StagingServices/build.xml"/>
+
+
+</filelist>
+
+
+
+
+
+
+
+
+<target name="main" depends="clean, makedir">
+<subant>
+
+<filelist refid="projects" />
+
+</subant>
+
+<copy todir="${jbossdeploy.dir}" overwrite="yes">
+<fileset dir="${class.dir}/ear" includes="MessageBoardEAR.ear"/>
+
+
+</copy>
+</target>
+</project>-->
+
+
+
+<!-- Stop Jboss -->
+<target name="stop-jboss" description="Stops back-end EJB container" >
+    <exec executable="${jboss.bin.dir}/shutdown.bat" spawn="true">
+        <arg line="-S" />
+    </exec>
+    <echo>+-----------------------------+</echo>
+    <echo>| J B O S S   S T O P P E D   |</echo>
+    <echo>+-----------------------------+</echo>
+</target>
+
+<!-- Start Jboss -->
+<target name="start-jboss" description="Starts back-end EJB container" >
+    <exec executable="${jboss.bin.dir}/run.bat" spawn="true">
+    </exec>
+    <echo>+-----------------------------+</echo>
+    <echo>| J B O S S   S T A R T E D   |</echo>
+    <echo>+-----------------------------+</echo>
+</target>
+
+<!-- deploy target-->
+<target name="deploy-war" description="deploy war file" depends="prepare">
+  <sequential>
+    <antcall target="stop-jboss" />
+    <war destfile="${file.name}" webxml="conf/web.xml">
+       <classes dir="bin" />
+    </war>
+    <antcall target="start-jboss" />
+        <echo>+----------------------------+</echo>
+        <echo>|   W A R  D E P L O Y E D   |</echo>
+        <echo>+----------------------------+</echo>
+  </sequential>
+</target>
